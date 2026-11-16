@@ -14,6 +14,10 @@
 - [homework-06](homework-06/): устройство видеокарты (GPU)
 - [homework-07](homework-07/): блок питания и система охлаждения ПК
 
+## Практика
+
+- [practice-01](practice-01/): BIOS/UEFI в Lenovo BIOS Simulator Center (10 задач)
+
 ## Другое
 
 - [independent-work](independent-work/): самостоятельная работа
