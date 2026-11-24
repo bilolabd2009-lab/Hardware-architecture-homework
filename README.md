@@ -18,6 +18,7 @@
 ## Практика
 
 - [practice-01](practice-01/): BIOS/UEFI в Lenovo BIOS Simulator Center (10 задач)
+- [practice-02](practice-02/): системы ввода-вывода и интерфейсы (5 задач)
 
 ## Другое
 
