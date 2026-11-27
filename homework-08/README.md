@@ -4,12 +4,15 @@
 
 Симулятор: https://download.lenovo.com/bsco/index.html (BSC V4.3.0), графический режим.
 
-Использованы два устройства, потому что часть пунктов есть только на настольных ПК:
+Использованы ноутбуки и настольные ПК, потому что часть пунктов есть только на настольных ПК.
+Скриншоты подтверждения сделаны на M70s Gen 4 и T14 Gen 4:
 
 | Устройство | Верхнее меню | Для каких задач |
 |---|---|---|
 | **ThinkPad T14s Gen 5 (21LS, 21LT)** — ноутбук | Main · Config · Date/Time · Security · Startup · Restart | 1, 2, 4, 6, 9 |
 | **ThinkCentre M70q Gen 5 (12TD…12TG)** — настольный ПК | Main · Devices · Advanced · Power · Security · Startup · Exit | 1, 2, 3, 4, 5, 7, 8, 9 |
+| **ThinkCentre M70s Gen 4 (12DM…12DT)** — настольный ПК | Main · Devices · Advanced · Power · Security · Startup · Exit | скриншоты к задачам 1–8, 10 |
+| **ThinkPad T14 Gen 4 (21HD, 21HE)** — ноутбук | Main · Config · Date/Time · Security · Startup · Restart | скриншоты к задаче 9 |
 
 В обоих BIOS: **F9** — Setup Defaults, **F10** — Save and Exit, **Esc** — выход.
 
@@ -138,9 +141,11 @@ PK нет, проверка не работает) и **Secure Boot Key State** 
 
 ## Задача 6. Пароль на включение (Power-On Password)
 
-Устройство — T14s Gen 5 (на ThinkCentre ввод пароля в симуляторе не поддерживается: «Simulator not support!!!»).
+Устройства — T14s Gen 5 и ThinkCentre M70s Gen 4. На ThinkCentre M70q Gen 5 ввод пароля
+в симуляторе не поддерживается («Simulator not support!!!»), а на M70s Gen 4 работает:
+путь **Security → Set Power-On Password** (снимки в конце файла).
 
-Путь: **Security → Password → Power-On Password**. Исходно **Disabled**.
+Путь на ThinkPad: **Security → Password → Power-On Password**. Исходно **Disabled**.
 
 1. Ввёл `Boot1234` в **Enter New Password** и **Confirm New Password**, нажал Save → статус **Enabled**.
 2. **F10 → Yes** (Save configuration changes and exit now?).
@@ -148,8 +153,10 @@ PK нет, проверка не работает) и **Secure Boot Key State** 
    пароля при входе симулятор не показывает: на реальном ThinkPad пароль спрашивается сразу после
    включения, ещё до логотипа ОС.
 4. Сброс: на реальной машине вводят текущий пароль `Boot1234`, а новый оставляют пустым → Disabled.
-   В симуляторе Save с пустыми полями не срабатывает (как и в практике 1), поэтому пароль снял через
-   **Restart → Load Factory Defaults** → статус снова **Disabled**.
+   В симуляторе так сделать нельзя: Save с пустыми полями не срабатывает (как и в практике 1),
+   на M70s Gen 4 появляется сообщение «Password must has at least 1 character». Поэтому сброс
+   пароля в симуляторе выполнить не удалось, пароль остался установленным. Load Factory Defaults
+   для этого не подходит: на реальном ThinkPad он пароли не сбрасывает (см. задачу 9).
 
 | | Power-On Password (POP) | Supervisor Password (SVP) |
 |---|---|---|
@@ -243,16 +250,20 @@ This might take several minutes to complete.»*
 |---|---|---|---|
 | 1 | Виртуализация | ThinkPad: **Security → Virtualization → Intel(R) Virtualization Technology**; ThinkCentre: **Advanced → CPU Setup** | On / Enabled |
 | 2 | TPM | ThinkPad: **Security → Security Chip**; ThinkCentre: **Security → TCG Feature Setup → Security Chip 2.0** | On / Enabled |
-| 3 | Power-On Password | **Security → Password → Power-On Password** (ThinkPad) | `Boot1234`, Enabled |
+| 3 | Power-On Password | ThinkPad: **Security → Password → Power-On Password**; ThinkCentre M70s Gen 4: **Security → Set Power-On Password** | `Boot1234`, Enabled |
 | 4 | Fast Boot | **Startup → Fast Boot** (ThinkCentre) | Disabled |
 | 5 | После потери питания | **Power → After Power Loss** (ThinkCentre) | Power On |
 | 6 | Сохранить и выйти | **F10 → Yes** | — |
 
-**Проверка после повторного входа:** виртуализация On, TPM On, Power-On Password Enabled,
-Fast Boot Disabled, After Power Loss = Power On. Все пять значений сохранились.
+**Проверка после повторного входа.** Перед сохранением все пять значений были выставлены:
+виртуализация Enabled, TPM Enabled, Power-On Password Enabled, Fast Boot Disabled,
+After Power Loss = Power On (снимки в конце файла). Проверить их после повторного входа в симуляторе
+нельзя: после **Save & Exit** он возвращается к выбору устройства, а при новом входе все значения
+снова заводские (After Power Loss = Last State, Fast Boot = Enabled). На реальном ПК настройки
+сохраняются в NVRAM и остаются после перезагрузки.
 
-**Возврат:** снял пароль (Load Factory Defaults, так как в симуляторе нельзя сохранить пустой пароль),
-Fast Boot снова Enabled, After Power Loss снова Last State (это значения по умолчанию после сброса).
+**Возврат:** Fast Boot снова Enabled, After Power Loss снова Last State — симулятор вернул их сам
+при повторном входе. Пароль в симуляторе снять не удалось: пустой пароль он не сохраняет (см. задачу 6).
 
 Почему так: VT-x нужен для Hyper-V, WSL 2 и виртуальных машин; TPM — для BitLocker; POP защищает
 от посторонних; без Fast Boot сотрудник сможет загрузиться с флешки через F12; Power On включит
@@ -267,8 +278,10 @@ Fast Boot снова Enabled, After Power Loss снова Last State (это з�
 процессор — в Advanced, питание — в Power. Пунктов After Power Loss и Fast Boot на ноутбуке нет.
 
 Отличия симулятора от реального BIOS: изменения применяются сразу, а не после перезагрузки;
-пароль не запрашивается при входе; нельзя сохранить пустой пароль; журнал событий на ThinkPad
-не поддерживается, а на ThinkCentre вместо записей стоит «XX»; на ThinkCentre не поддерживается ввод паролей.
+пароль не запрашивается при входе; нельзя сохранить пустой пароль, поэтому пароль не снять;
+журнал событий на ThinkPad не поддерживается, а на ThinkCentre вместо записей стоит «XX»;
+на ThinkCentre M70q Gen 5 не поддерживается ввод паролей (на M70s Gen 4 работает);
+на M70s Gen 4 после Save & Exit все настройки сбрасываются на заводские.
 
 ---
 
