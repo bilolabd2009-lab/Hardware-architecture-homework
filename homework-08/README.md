@@ -269,3 +269,129 @@ Fast Boot снова Enabled, After Power Loss снова Last State (это з�
 Отличия симулятора от реального BIOS: изменения применяются сразу, а не после перезагрузки;
 пароль не запрашивается при входе; нельзя сохранить пустой пароль; журнал событий на ThinkPad
 не поддерживается, а на ThinkCentre вместо записей стоит «XX»; на ThinkCentre не поддерживается ввод паролей.
+
+---
+
+## Скриншоты подтверждения
+
+Снимки сделаны 27.11.2026 в том же симуляторе на **ThinkCentre M70s Gen 4 (12DM, 12DN, 12DS, 12DT)**,
+а для полного сброса (задача 9) на **ThinkPad T14 Gen 4 (21HD, 21HE)**. Пути на этих моделях
+совпадают с путями ThinkCentre и ThinkPad, описанными выше. Все файлы лежат в папке [img](img/).
+
+Две особенности M70s Gen 4: здесь ввод пароля работает, а после **Save & Exit** симулятор
+возвращается к выбору устройства и сбрасывает все значения. Поэтому в задаче 10 каждая настройка
+снята до сохранения.
+
+### Задача 1. Advanced → CPU Setup → Intel(R) Virtualization Technology = Enabled
+
+![VT-x](img/01_vtx_enabled.jpg)
+
+### Задача 2. Security → TCG Feature Setup → Security Chip 2.0 = Enabled (Discrete TPM 2.0)
+
+![TPM](img/02_tpm_enabled.jpg)
+
+### Задача 3. Power → After Power Loss
+
+По умолчанию Last State:
+
+![Last State](img/03a_power_default_last_state.jpg)
+
+Выбран Power On (потом возвращён Last State):
+
+![Power On](img/03b_power_on.jpg)
+
+### Задача 4. Security → Secure Boot
+
+Исходно Enabled, System Mode = User Mode:
+
+![Secure Boot Enabled](img/04a_secureboot_enabled.jpg)
+
+Переключено в Disabled (окна с предупреждением нет), затем возвращено Enabled:
+
+![Secure Boot Disabled](img/04b_secureboot_disabled.jpg)
+
+### Задача 5. Startup → Fast Boot
+
+Исходно Enabled:
+
+![Fast Boot Enabled](img/05a_fastboot_enabled.jpg)
+
+Отключено, затем включено обратно:
+
+![Fast Boot Disabled](img/05b_fastboot_disabled.jpg)
+
+### Задача 6. Security → Set Power-On Password
+
+Окно установки пароля:
+
+![Окно пароля](img/06a_set_pop_dialog.jpg)
+
+Введён `Boot1234` в оба поля:
+
+![Boot1234](img/06b_pop_boot1234.jpg)
+
+После сохранения пункт Set Power-On Password = Enabled:
+
+![Пароль установлен](img/06c_pop_enabled.jpg)
+
+Сброс пустыми полями симулятор не принимает («Password must has at least 1 character»):
+
+![Сброс не принят](img/06d_reset_blank_rejected.jpg)
+
+### Задача 7. Devices → Storage Setup → Configure Storage as
+
+AHCI (по умолчанию), под пунктом предупреждение, что смена режима может помешать загрузке:
+
+![AHCI](img/07a_storage_ahci.jpg)
+
+Переключено на RAID, затем обратно на AHCI:
+
+![RAID](img/07b_storage_raid.jpg)
+
+### Задача 8. Main → BIOS Event Log
+
+![BIOS Event Log](img/08a_event_log_menu.jpg)
+
+Типы событий:
+
+![Список событий](img/08b_event_list.jpg)
+
+Очистка журнала:
+
+![Clear BIOS Event Log](img/08c_clear_event_log.jpg)
+
+![После очистки](img/08d_after_clear.jpg)
+
+### Задача 9. Load Factory Defaults и Reset system to Factory Defaults
+
+Меню Exit на ThinkCentre:
+
+![Exit](img/09a_exit_menu.jpg)
+
+Load Factory Defaults, подтверждено Yes:
+
+![Load Factory Defaults](img/09b_load_factory_defaults.jpg)
+
+ThinkPad T14 Gen 4, Security → Reset system to Factory Defaults:
+
+![Security ThinkPad](img/09c_thinkpad_security.jpg)
+
+Предупреждение о полном сбросе, нажато **No** (сброс не выполнялся):
+
+![Reset system warning](img/09d_reset_system_warning.jpg)
+
+### Задача 10. Подготовка ПК нового сотрудника
+
+Виртуализация и TPM включены (см. снимки к задачам 1 и 2), пароль `Boot1234` установлен (задача 6).
+
+After Power Loss = Power On:
+
+![Power On](img/10c_power_on.jpg)
+
+Fast Boot = Disabled:
+
+![Fast Boot Disabled](img/10d_fastboot_disabled.jpg)
+
+Save & Exit:
+
+![Save & reset](img/10a_save_and_exit.jpg)
